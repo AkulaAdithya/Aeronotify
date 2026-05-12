@@ -1,0 +1,9 @@
+import { Router } from "express";
+import { loginAdmin } from "../controllers/authController.js";
+
+const router = Router();
+
+// POST /api/auth/login — Admin login
+router.post("/login", loginAdmin);
+
+export default router;

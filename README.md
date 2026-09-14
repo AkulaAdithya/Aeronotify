@@ -46,6 +46,8 @@ MONGO_URI=mongodb://localhost:27017/aeronotify
 JWT_SECRET=your_secret_key_here
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_google_app_password
+ADMIN_EMAIL=admin@aeronotify.com
+ADMIN_PASSWORD=your_secure_admin_password
 ```
 
 ### 3. Seed Admin Account
@@ -53,7 +55,7 @@ EMAIL_PASS=your_google_app_password
 ```bash
 cd server
 npm run seed
-# Creates: admin@aeronotify.com / admin123
+# Creates the admin account specified in your .env
 ```
 
 ### 4. Run Development Servers

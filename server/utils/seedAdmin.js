@@ -5,29 +5,27 @@ import Admin from "../models/Admin.js";
 
 dotenv.config();
 
-// ─── Add your admin accounts here ───────────────────────────
-const admins = [
-  { email: "admin@aeronotify.com", password: "admin123" },
-  { email: "controller@aeronotify.com", password: "controller123" },
-  // Add more admins below:
-  // { email: "newadmin@aeronotify.com", password: "securepass" },
-];
+const adminEmail = process.env.ADMIN_EMAIL;
+const adminPassword = process.env.ADMIN_PASSWORD;
 
 const seedAdmins = async () => {
+  if (!adminEmail || !adminPassword) {
+    console.error("❌ Seeding aborted: ADMIN_EMAIL and ADMIN_PASSWORD must be defined in .env");
+    process.exit(1);
+  }
+
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ Connected to MongoDB for seeding\n");
 
-    for (const admin of admins) {
-      const existing = await Admin.findOne({ email: admin.email });
-      if (existing) {
-        console.log(`ℹ  ${admin.email} already exists — skipped.`);
-      } else {
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(admin.password, salt);
-        await Admin.create({ email: admin.email, password: hashedPassword });
-        console.log(`✅ Created: ${admin.email} / ${admin.password}`);
-      }
+    const existing = await Admin.findOne({ email: adminEmail.toLowerCase() });
+    if (existing) {
+      console.log(`ℹ  ${adminEmail} already exists — skipped.`);
+    } else {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(adminPassword, salt);
+      await Admin.create({ email: adminEmail.toLowerCase(), password: hashedPassword });
+      console.log(`✅ Created admin account: ${adminEmail}`);
     }
 
     console.log(`\n📋 Total admins in DB: ${await Admin.countDocuments()}`);
